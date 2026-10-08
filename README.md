@@ -38,9 +38,22 @@ Leave social URLs empty in `site.ts` until verified — unconfigured channels st
 
 There is no backend yet. The contact form opens WhatsApp / a mailto draft, or copies a formatted inquiry to the clipboard. Hook into `submitInquiryToApi` in `src/lib/inquiry.ts` when Formspree, Resend, Supabase, or a custom API is ready.
 
+## Social share / Open Graph image
+
+Share preview image: `public/images/og-share.jpg`
+
+After the site is live, update `index.html` so `og:image` and `twitter:image` use the **full absolute URL**, for example:
+
+```html
+<meta property="og:image" content="https://yourdomain.com/images/og-share.jpg" />
+<meta name="twitter:image" content="https://yourdomain.com/images/og-share.jpg" />
+```
+
+Then test with [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/) and refresh the scrape cache.
+
 ## Notes before launch
 
-- Confirm Facebook / Instagram / Messenger / Google Maps URLs
+- Set `siteUrl` in `src/data/site.ts` once the production domain is known
 - Compress `public/videos/travel-moments.mp4` for production (current file is large)
 - Add a Privacy Policy page when legal copy is available
 - Rates shown are from client materials and marked as subject to change

@@ -9,21 +9,25 @@ export const siteConfig = {
   tagline: 'Good trips start with great plans.',
   description:
     'A Philippine travel agency helping families, friends, and groups plan domestic tours and select international journeys — carefully, personally, and with local know-how.',
-  phone: '09277649006',
-  phoneDisplay: '0927 764 9006',
-  phoneSecondary: '043-7575-980',
+  phone: '09669670568',
+  phoneDisplay: '0966 967 0568',
+  phoneSecondary: '0927 764 9006',
   email: 'r_ehouseoftravel@yahoo.com',
   /** Set when a verified Messenger page URL is available */
   messengerUrl: '',
-  /** Set when a verified Facebook page URL is available */
-  facebookUrl: '',
+  /** Verified from brand banner */
+  facebookUrl: 'https://fb.com/randehouseoftravel',
   /** Set when a verified Instagram profile URL is available */
   instagramUrl: '',
   /** Digits only / E.164-ready; derived from verified phone */
-  whatsappNumber: '639277649006',
-  businessAddress: '05 General Luna St., Brgy. Poblacion, San Juan, Batangas',
+  whatsappNumber: '639669670568',
+  businessAddress: '#05 General Luna St., Poblacion, San Juan, Batangas, Philippines',
   googleMapsUrl: '',
   pickupNote: 'Common pickup reference: Out San Juan, Batangas',
+  /** Share / Open Graph image (absolute URL required by most social crawlers once live) */
+  ogImagePath: '/images/og-share.jpg',
+  /** Set to your live site origin after deploy, e.g. https://yourdomain.com */
+  siteUrl: '',
   /** From client DOT Basic Accreditation certificate */
   dotAccreditation: {
     number: 'DOT-R4A-TTA-01243-2023',

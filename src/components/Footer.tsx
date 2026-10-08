@@ -66,10 +66,29 @@ export function Footer() {
                 </a>
               </li>
             ) : null}
+            {siteConfig.phoneSecondary ? (
+              <li>
+                <a href={`tel:${siteConfig.phoneSecondary.replace(/\s/g, '')}`} className="hover:text-white">
+                  {siteConfig.phoneSecondary}
+                </a>
+              </li>
+            ) : null}
             {siteConfig.email ? (
               <li>
                 <a href={`mailto:${siteConfig.email}`} className="hover:text-white">
                   {siteConfig.email}
+                </a>
+              </li>
+            ) : null}
+            {siteConfig.facebookUrl ? (
+              <li>
+                <a
+                  href={siteConfig.facebookUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-white"
+                >
+                  Facebook
                 </a>
               </li>
             ) : null}

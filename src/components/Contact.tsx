@@ -181,7 +181,7 @@ export function Contact({ prefill }: ContactProps) {
             ) : null}
             {siteConfig.phoneSecondary ? (
               <li className="px-4 text-sm text-dark-text/65">
-                Landline: {siteConfig.phoneSecondary}
+                Also: {siteConfig.phoneSecondary}
               </li>
             ) : null}
             {siteConfig.email ? (
@@ -194,6 +194,24 @@ export function Contact({ prefill }: ContactProps) {
                   <span>
                     <span className="block text-xs text-dark-text/55">Email</span>
                     {siteConfig.email}
+                  </span>
+                </a>
+              </li>
+            ) : null}
+            {siteConfig.facebookUrl ? (
+              <li>
+                <a
+                  href={siteConfig.facebookUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 rounded-xl bg-white px-4 py-3 text-ocean-navy transition hover:bg-white/80"
+                >
+                  <span className="flex h-[18px] w-[18px] items-center justify-center text-sm font-bold text-tropical-green">
+                    f
+                  </span>
+                  <span>
+                    <span className="block text-xs text-dark-text/55">Facebook</span>
+                    fb.com/randehouseoftravel
                   </span>
                 </a>
               </li>
