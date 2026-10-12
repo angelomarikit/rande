@@ -74,8 +74,62 @@ function linesToList(value: string): string[] {
     .filter(Boolean)
 }
 
-function listToLines(value?: string[]): string {
+function listToLines(value?: string[] | null): string {
   return (value ?? []).join('\n')
+}
+
+function normalizeCollectionItem(kind: CollectionKind, item: CollectionItem): CollectionItem {
+  if (kind === 'destinations') {
+    const dest = item as Destination
+    return {
+      ...dest,
+      tags: dest.tags ?? [],
+      relatedPackageIds: dest.relatedPackageIds ?? [],
+      size: dest.size ?? 'medium',
+      name: dest.name ?? '',
+      location: dest.location ?? '',
+      description: dest.description ?? '',
+      image: dest.image ?? '',
+    }
+  }
+
+  if (kind === 'packages') {
+    const pkg = item as TourPackage
+    return {
+      ...pkg,
+      title: pkg.title ?? '',
+      destination: pkg.destination ?? '',
+      summary: pkg.summary ?? '',
+      image: pkg.image ?? '',
+      category: pkg.category ?? [],
+      highlights: pkg.highlights ?? [],
+      inclusions: pkg.inclusions ?? [],
+      exclusions: pkg.exclusions ?? [],
+      travelDates: pkg.travelDates ?? [],
+      itinerary: (pkg.itinerary ?? []).map((day) => ({
+        day: day.day ?? '',
+        items: day.items ?? [],
+      })),
+    }
+  }
+
+  if (kind === 'gallery') {
+    const photo = item as GalleryItem
+    return {
+      ...photo,
+      src: photo.src ?? '',
+      alt: photo.alt ?? '',
+      caption: photo.caption ?? '',
+      aspect: photo.aspect ?? 'landscape',
+    }
+  }
+
+  const faq = item as FaqItem
+  return {
+    ...faq,
+    question: faq.question ?? '',
+    answer: faq.answer ?? '',
+  }
 }
 
 function itemLabel(item: CollectionItem): string {
@@ -208,18 +262,19 @@ export function CollectionPage({ kind }: { kind: CollectionKind }) {
   }, [content, kind])
 
   useEffect(() => {
-    setItems(sourceItems)
-    if (!selectedId && sourceItems[0]) {
-      setSelectedId(sourceItems[0].id)
-      setDraft({ ...sourceItems[0] })
+    const normalized = sourceItems.map((item) => normalizeCollectionItem(kind, item))
+    setItems(normalized)
+    if (!selectedId && normalized[0]) {
+      setSelectedId(normalized[0].id)
+      setDraft(normalizeCollectionItem(kind, normalized[0]))
     }
-  }, [sourceItems, selectedId])
+  }, [sourceItems, selectedId, kind])
 
   const selectItem = (id: string) => {
     const item = items.find((entry) => entry.id === id)
     if (!item) return
     setSelectedId(id)
-    setDraft({ ...item })
+    setDraft(normalizeCollectionItem(kind, item))
     setStatus('')
     setError('')
   }
@@ -251,7 +306,7 @@ export function CollectionPage({ kind }: { kind: CollectionKind }) {
     if (!supabase) throw new Error('Supabase is not configured. Connect it first, then try again.')
 
     const nextId = finalizeId(kind, item)
-    const payload = { ...item, id: nextId } as CollectionItem
+    const payload = { ...normalizeCollectionItem(kind, item), id: nextId } as CollectionItem
     const sortOrder = options?.sortOrder ?? 0
 
     const { error: saveError } = await supabase.from(tableMap[kind]).upsert({
@@ -556,7 +611,7 @@ function DestinationFields({
       </AdminField>
       <AdminField label="Tags (comma separated)" hint="Example: Beach, Group">
         <AdminInput
-          value={item.tags.join(', ')}
+          value={(item.tags ?? []).join(', ')}
           onChange={(e) =>
             onChange({
               tags: e.target.value
@@ -807,7 +862,7 @@ function PackageFields({
               <AdminTextarea
                 rows={5}
                 value={(item.itinerary ?? [])
-                  .map((day) => `${day.day} | ${day.items.join('; ')}`)
+                  .map((day) => `${day.day} | ${(day.items ?? []).join('; ')}`)
                   .join('\n')}
                 onChange={(e) =>
                   onChange({

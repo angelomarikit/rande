@@ -24,6 +24,56 @@ function rowData<T>(rows: { id?: string; key?: string; data?: unknown; content?:
     })
 }
 
+function normalizeDestination(item: Destination): Destination {
+  return {
+    ...item,
+    name: item.name ?? '',
+    location: item.location ?? '',
+    description: item.description ?? '',
+    image: item.image ?? '',
+    size: item.size ?? 'medium',
+    tags: item.tags ?? [],
+    relatedPackageIds: item.relatedPackageIds ?? [],
+  }
+}
+
+function normalizePackage(item: TourPackage): TourPackage {
+  return {
+    ...item,
+    title: item.title ?? '',
+    destination: item.destination ?? '',
+    summary: item.summary ?? '',
+    image: item.image ?? '',
+    category: item.category ?? [],
+    highlights: item.highlights ?? [],
+    inclusions: item.inclusions ?? [],
+    exclusions: item.exclusions ?? [],
+    travelDates: item.travelDates ?? [],
+    itinerary: (item.itinerary ?? []).map((day) => ({
+      day: day.day ?? '',
+      items: day.items ?? [],
+    })),
+  }
+}
+
+function normalizeGalleryItem(item: GalleryItem): GalleryItem {
+  return {
+    ...item,
+    src: item.src ?? '',
+    alt: item.alt ?? '',
+    caption: item.caption ?? '',
+    aspect: item.aspect ?? 'landscape',
+  }
+}
+
+function normalizeFaq(item: FaqItem): FaqItem {
+  return {
+    ...item,
+    question: item.question ?? '',
+    answer: item.answer ?? '',
+  }
+}
+
 export async function loadSiteContent(): Promise<SiteContent> {
   const fallback = getStaticSiteContent()
 
@@ -75,21 +125,23 @@ export async function loadSiteContent(): Promise<SiteContent> {
 
     const destinations =
       destinationsRes.data?.length
-        ? rowData<Destination>(destinationsRes.data)
+        ? rowData<Destination>(destinationsRes.data).map(normalizeDestination)
         : fallback.destinations
 
     const packages =
       packagesRes.data?.length
-        ? rowData<TourPackage>(packagesRes.data)
+        ? rowData<TourPackage>(packagesRes.data).map(normalizePackage)
         : fallback.packages
 
     const gallery =
       galleryRes.data?.length
-        ? rowData<GalleryItem>(galleryRes.data)
+        ? rowData<GalleryItem>(galleryRes.data).map(normalizeGalleryItem)
         : fallback.gallery
 
     const faqs =
-      faqsRes.data?.length ? rowData<FaqItem>(faqsRes.data) : fallback.faqs
+      faqsRes.data?.length
+        ? rowData<FaqItem>(faqsRes.data).map(normalizeFaq)
+        : fallback.faqs
 
     const testimonials =
       testimonialsRes.data?.length

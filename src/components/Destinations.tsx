@@ -32,7 +32,7 @@ function DestinationTile({
       <div className="absolute inset-0 bg-gradient-to-t from-ocean-navy/85 via-ocean-navy/25 to-transparent transition-opacity duration-300 group-hover:from-ocean-navy/90" />
       <div className="relative flex h-full flex-col justify-end p-5 sm:p-6">
         <div className="flex flex-wrap gap-2">
-          {destination.tags.map((tag) => (
+          {(destination.tags ?? []).map((tag) => (
             <span
               key={tag}
               className="rounded-md bg-white/15 px-2 py-0.5 text-[10px] font-semibold tracking-wide text-white/90 uppercase backdrop-blur-sm"
