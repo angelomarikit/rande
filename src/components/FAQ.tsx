@@ -1,23 +1,30 @@
-import { useId, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ChevronDown } from 'lucide-react'
-import { faqs } from '@/data/faqs'
+import { useSiteContent } from '@/context/ContentContext'
 import { SectionHeading } from './ui/SectionHeading'
 import { Reveal } from './ui/Reveal'
 
 export function FAQ() {
-  const [openId, setOpenId] = useState<string | null>(faqs[0]?.id ?? null)
+  const { content } = useSiteContent()
+  const faqs = content.faqs
+  const heading = content.sections.faqs
+  const [openId, setOpenId] = useState<string | null>(null)
   const baseId = useId()
   const reduce = useReducedMotion()
+
+  useEffect(() => {
+    setOpenId(faqs[0]?.id ?? null)
+  }, [faqs])
 
   return (
     <section id="faqs" className="section-pad scroll-mt-nav py-16 sm:py-24">
       <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-12">
         <Reveal className="lg:col-span-4">
           <SectionHeading
-            eyebrow="FAQs"
-            title="Questions before you take off?"
-            support="Straight answers about inquiries — without inventing policies we haven’t published yet."
+            eyebrow={heading.eyebrow}
+            title={heading.title}
+            support={heading.support}
           />
         </Reveal>
 

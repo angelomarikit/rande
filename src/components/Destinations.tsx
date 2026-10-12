@@ -1,4 +1,4 @@
-import { destinations } from '@/data/destinations'
+import { useSiteContent } from '@/context/ContentContext'
 import type { Destination, InquiryPrefill } from '@/types'
 import { SectionHeading } from './ui/SectionHeading'
 import { Reveal } from './ui/Reveal'
@@ -57,6 +57,9 @@ function DestinationTile({
 }
 
 export function Destinations({ onSelect, onInquiry }: DestinationsProps) {
+  const { content } = useSiteContent()
+  const destinations = content.destinations
+  const heading = content.sections.destinations
   const [featureA, featureB, ...rest] = destinations
 
   const handle = (d: Destination) => {
@@ -77,9 +80,9 @@ export function Destinations({ onSelect, onInquiry }: DestinationsProps) {
       <div className="mx-auto max-w-7xl">
         <Reveal>
           <SectionHeading
-            eyebrow="Featured destinations"
-            title="Places you’ll fall in love with."
-            support="Find your next escape, near or far. Some spots below are active tour routes; others are inspiration for custom trips."
+            eyebrow={heading.eyebrow}
+            title={heading.title}
+            support={heading.support}
           />
         </Reveal>
 

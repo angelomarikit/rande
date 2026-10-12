@@ -15,9 +15,12 @@ export interface InquiryPayload {
   consent: boolean
 }
 
-export function buildInquiryMessage(data: InquiryPayload): string {
+export function buildInquiryMessage(
+  data: InquiryPayload,
+  companyName: string = siteConfig.companyName,
+): string {
   const lines = [
-    `Inquiry for ${siteConfig.companyName}`,
+    `Inquiry for ${companyName}`,
     '',
     `Name: ${data.fullName}`,
     `Email: ${data.email || '—'}`,
@@ -41,18 +44,25 @@ export function buildInquiryMessage(data: InquiryPayload): string {
   return lines.join('\n')
 }
 
-export function buildMailtoLink(data: InquiryPayload): string | null {
-  if (!siteConfig.email) return null
+export function buildMailtoLink(
+  data: InquiryPayload,
+  email: string = siteConfig.email,
+  companyName: string = siteConfig.companyName,
+): string | null {
+  if (!email) return null
   const subject = encodeURIComponent(
     `Trip inquiry${data.packageName ? `: ${data.packageName}` : ''} — ${data.fullName}`,
   )
-  const body = encodeURIComponent(buildInquiryMessage(data))
-  return `mailto:${siteConfig.email}?subject=${subject}&body=${body}`
+  const body = encodeURIComponent(buildInquiryMessage(data, companyName))
+  return `mailto:${email}?subject=${subject}&body=${body}`
 }
 
-export function buildWhatsAppLink(message: string): string | null {
-  if (!siteConfig.whatsappNumber) return null
-  return `https://wa.me/${siteConfig.whatsappNumber}?text=${encodeURIComponent(message)}`
+export function buildWhatsAppLink(
+  message: string,
+  whatsappNumber: string = siteConfig.whatsappNumber,
+): string | null {
+  if (!whatsappNumber) return null
+  return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`
 }
 
 export function prefillToDetails(prefill?: InquiryPrefill): string {

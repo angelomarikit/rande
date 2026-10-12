@@ -1,4 +1,4 @@
-import { testimonials } from '@/data/gallery'
+import { useSiteContent } from '@/context/ContentContext'
 import { SectionHeading } from './ui/SectionHeading'
 
 /**
@@ -6,6 +6,9 @@ import { SectionHeading } from './ui/SectionHeading'
  * Do not populate with fabricated reviews.
  */
 export function Testimonials() {
+  const { content } = useSiteContent()
+  const testimonials = content.testimonials
+
   if (!testimonials.length) return null
 
   return (
@@ -17,7 +20,22 @@ export function Testimonials() {
           support="Verified guest feedback."
           className="mx-auto"
         />
-        {/* Render carousel here once verified testimonials exist */}
+        <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {testimonials.map((item) => (
+            <blockquote
+              key={item.id}
+              className="rounded-2xl border border-ocean-navy/8 bg-white p-6 shadow-sm"
+            >
+              <p className="text-dark-text/80">“{item.quote}”</p>
+              <footer className="mt-4 text-sm font-semibold text-ocean-navy">
+                {item.name}
+                {item.trip ? (
+                  <span className="mt-1 block font-normal text-dark-text/55">{item.trip}</span>
+                ) : null}
+              </footer>
+            </blockquote>
+          ))}
+        </div>
       </div>
     </section>
   )

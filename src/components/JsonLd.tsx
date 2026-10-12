@@ -1,23 +1,26 @@
-import { siteConfig } from '@/data/site'
+import { useSiteContent } from '@/context/ContentContext'
 
 /** TravelAgency schema using only verified company details. */
 export function JsonLd() {
+  const { content } = useSiteContent()
+  const settings = content.settings
+
   const data = {
     '@context': 'https://schema.org',
     '@type': 'TravelAgency',
-    name: siteConfig.companyName,
-    description: siteConfig.description,
-    foundingDate: String(siteConfig.sinceYear),
-    telephone: siteConfig.phone,
-    email: siteConfig.email,
+    name: settings.companyName,
+    description: settings.description,
+    foundingDate: String(settings.sinceYear),
+    telephone: settings.phone,
+    email: settings.email,
     address: {
       '@type': 'PostalAddress',
-      streetAddress: '05 General Luna St., Brgy. Poblacion',
+      streetAddress: settings.businessAddress,
       addressLocality: 'San Juan',
       addressRegion: 'Batangas',
       addressCountry: 'PH',
     },
-    identifier: siteConfig.dotAccreditation.number,
+    identifier: settings.dotAccreditation.number,
   }
 
   return (

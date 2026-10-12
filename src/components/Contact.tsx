@@ -3,8 +3,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Check, ClipboardCopy, Mail, MessageCircle, Phone } from 'lucide-react'
-import { destinations } from '@/data/destinations'
-import { siteConfig } from '@/data/site'
+import { useSiteContent } from '@/context/ContentContext'
 import {
   buildInquiryMessage,
   buildMailtoLink,
@@ -47,6 +46,10 @@ interface ContactProps {
 }
 
 export function Contact({ prefill }: ContactProps) {
+  const { content } = useSiteContent()
+  const siteConfig = content.settings
+  const destinations = content.destinations
+  const heading = content.sections.contact
   const [status, setStatus] = useState<'idle' | 'ready' | 'copied' | 'error'>('idle')
   const [draft, setDraft] = useState('')
 
@@ -110,11 +113,11 @@ export function Contact({ prefill }: ContactProps) {
       consent: true,
     }
 
-    const message = buildInquiryMessage(payload)
+    const message = buildInquiryMessage(payload, siteConfig.companyName)
     setDraft(message)
 
     if (values.contactMethod === 'whatsapp' && siteConfig.whatsappNumber) {
-      const url = buildWhatsAppLink(message)
+      const url = buildWhatsAppLink(message, siteConfig.whatsappNumber)
       if (url) {
         window.open(url, '_blank', 'noopener,noreferrer')
         setStatus('ready')
@@ -123,7 +126,7 @@ export function Contact({ prefill }: ContactProps) {
     }
 
     if (values.contactMethod === 'email' && siteConfig.email) {
-      const mailto = buildMailtoLink(payload)
+      const mailto = buildMailtoLink(payload, siteConfig.email, siteConfig.companyName)
       if (mailto) {
         window.location.href = mailto
         setStatus('ready')
@@ -159,9 +162,9 @@ export function Contact({ prefill }: ContactProps) {
       <div className="section-pad mx-auto grid max-w-7xl gap-10 lg:grid-cols-12">
         <Reveal className="lg:col-span-5">
           <SectionHeading
-            eyebrow="Plan my trip"
-            title="Tell us about your trip."
-            support="Share a few details and we’ll follow up. This form does not auto-book — it helps us prepare a quotation."
+            eyebrow={heading.eyebrow}
+            title={heading.title}
+            support={heading.support}
           />
 
           <ul className="mt-8 space-y-4">
@@ -234,7 +237,7 @@ export function Contact({ prefill }: ContactProps) {
             ) : null}
           </ul>
 
-          <p className="mt-6 text-sm text-dark-text/55">{siteConfig.pickupNote}</p>
+          <p className="mt-6 text-sm text-dark-text/55">{heading.formNote || siteConfig.pickupNote}</p>
         </Reveal>
 
         <Reveal className="lg:col-span-7" delay={0.08}>

@@ -1,7 +1,9 @@
-import { navLinks, siteConfig } from '@/data/site'
-import { destinations } from '@/data/destinations'
+import { navLinks } from '@/data/site'
+import { useSiteContent } from '@/context/ContentContext'
 
 export function Footer() {
+  const { content } = useSiteContent()
+  const settings = content.settings
   const year = new Date().getFullYear()
 
   return (
@@ -10,15 +12,15 @@ export function Footer() {
         <div className="lg:col-span-1">
           <div className="inline-block">
             <img
-              src="/images/logo-rande.png"
-              alt={`${siteConfig.companyName} logo`}
+              src={settings.logoUrl}
+              alt={`${settings.companyName} logo`}
               className="h-14 w-auto object-contain brightness-110"
               width={180}
               height={56}
             />
           </div>
-          <p className="mt-4 text-sm leading-relaxed text-white/70">{siteConfig.description}</p>
-          <p className="mt-3 text-sm text-sunshine-gold">Since {siteConfig.sinceYear}</p>
+          <p className="mt-4 text-sm leading-relaxed text-white/70">{settings.description}</p>
+          <p className="mt-3 text-sm text-sunshine-gold">Since {settings.sinceYear}</p>
         </div>
 
         <div>
@@ -41,7 +43,7 @@ export function Footer() {
             Destinations
           </h3>
           <ul className="mt-4 space-y-2">
-            {destinations.slice(0, 6).map((d) => (
+            {content.destinations.slice(0, 6).map((d) => (
               <li key={d.id}>
                 <a
                   href="#destinations"
@@ -59,31 +61,34 @@ export function Footer() {
             Contact
           </h3>
           <ul className="mt-4 space-y-2 text-sm text-white/70">
-            {siteConfig.phoneDisplay ? (
+            {settings.phoneDisplay ? (
               <li>
-                <a href={`tel:${siteConfig.phone}`} className="hover:text-white">
-                  {siteConfig.phoneDisplay}
+                <a href={`tel:${settings.phone}`} className="hover:text-white">
+                  {settings.phoneDisplay}
                 </a>
               </li>
             ) : null}
-            {siteConfig.phoneSecondary ? (
-              <li>
-                <a href={`tel:${siteConfig.phoneSecondary.replace(/\s/g, '')}`} className="hover:text-white">
-                  {siteConfig.phoneSecondary}
-                </a>
-              </li>
-            ) : null}
-            {siteConfig.email ? (
-              <li>
-                <a href={`mailto:${siteConfig.email}`} className="hover:text-white">
-                  {siteConfig.email}
-                </a>
-              </li>
-            ) : null}
-            {siteConfig.facebookUrl ? (
+            {settings.phoneSecondary ? (
               <li>
                 <a
-                  href={siteConfig.facebookUrl}
+                  href={`tel:${settings.phoneSecondary.replace(/\s/g, '')}`}
+                  className="hover:text-white"
+                >
+                  {settings.phoneSecondary}
+                </a>
+              </li>
+            ) : null}
+            {settings.email ? (
+              <li>
+                <a href={`mailto:${settings.email}`} className="hover:text-white">
+                  {settings.email}
+                </a>
+              </li>
+            ) : null}
+            {settings.facebookUrl ? (
+              <li>
+                <a
+                  href={settings.facebookUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:text-white"
@@ -92,9 +97,9 @@ export function Footer() {
                 </a>
               </li>
             ) : null}
-            {siteConfig.businessAddress ? <li>{siteConfig.businessAddress}</li> : null}
+            {settings.businessAddress ? <li>{settings.businessAddress}</li> : null}
             <li className="pt-2 text-sunshine-gold/90">
-              DOT Accr. {siteConfig.dotAccreditation.number}
+              DOT Accr. {settings.dotAccreditation.number}
             </li>
           </ul>
         </div>
@@ -103,7 +108,7 @@ export function Footer() {
       <div className="border-t border-white/10">
         <div className="section-pad mx-auto flex max-w-7xl flex-col gap-2 py-5 text-xs text-white/50 sm:flex-row sm:items-center sm:justify-between">
           <p>
-            © {year} {siteConfig.companyName}. All rights reserved.
+            © {year} {settings.companyName}. All rights reserved.
           </p>
           <p>Rates and schedules subject to change and availability.</p>
         </div>

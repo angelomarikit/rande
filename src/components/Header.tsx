@@ -1,7 +1,8 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Menu, X } from 'lucide-react'
-import { navLinks, siteConfig } from '@/data/site'
+import { navLinks } from '@/data/site'
+import { useSiteContent } from '@/context/ContentContext'
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock'
 import { Button } from './ui/Button'
 
@@ -10,6 +11,7 @@ interface HeaderProps {
 }
 
 export function Header({ onPlanTrip }: HeaderProps) {
+  const { content } = useSiteContent()
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
   const menuId = useId()
@@ -52,8 +54,8 @@ export function Header({ onPlanTrip }: HeaderProps) {
       <div className="section-pad mx-auto flex h-[4.25rem] max-w-7xl items-center justify-between gap-4 lg:h-[4.75rem]">
         <a href="#home" className="relative z-10 shrink-0 rounded-md">
           <img
-            src="/images/logo-rande.png"
-            alt={`${siteConfig.companyName} logo`}
+            src={content.settings.logoUrl}
+            alt={`${content.settings.companyName} logo`}
             className="h-12 w-auto max-w-[9.5rem] object-contain object-left drop-shadow-[0_1px_2px_rgba(0,0,0,0.35)] sm:h-14 sm:max-w-[11rem]"
             width={176}
             height={56}
@@ -78,11 +80,7 @@ export function Header({ onPlanTrip }: HeaderProps) {
         </nav>
 
         <div className="hidden lg:block">
-          <Button
-            variant={solid ? 'primary' : 'light'}
-            size="md"
-            onClick={onPlanTrip}
-          >
+          <Button variant={solid ? 'primary' : 'light'} size="md" onClick={onPlanTrip}>
             Plan My Trip
           </Button>
         </div>

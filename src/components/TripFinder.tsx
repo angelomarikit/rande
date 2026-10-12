@@ -2,8 +2,7 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { MapPin, Search } from 'lucide-react'
-import { destinations } from '@/data/destinations'
-import { packages } from '@/data/packages'
+import { useSiteContent } from '@/context/ContentContext'
 import type { InquiryPrefill, TravelType } from '@/types'
 import { Button } from './ui/Button'
 import { Reveal } from './ui/Reveal'
@@ -28,6 +27,11 @@ interface TripFinderProps {
 }
 
 export function TripFinder({ onMatchPackages, onInquiry }: TripFinderProps) {
+  const { content } = useSiteContent()
+  const destinations = content.destinations
+  const packages = content.packages
+  const copy = content.sections.trip_finder
+
   const {
     register,
     handleSubmit,
@@ -89,11 +93,9 @@ export function TripFinder({ onMatchPackages, onInquiry }: TripFinderProps) {
               </span>
               <div>
                 <h2 className="font-display text-xl font-bold text-ocean-navy sm:text-2xl">
-                  Where will your next journey take you?
+                  {copy.title}
                 </h2>
-                <p className="mt-1 text-sm text-dark-text/65">
-                  Tell us a few details — we’ll point you to matching packages or open an inquiry.
-                </p>
+                <p className="mt-1 text-sm text-dark-text/65">{copy.support}</p>
               </div>
             </div>
           </div>
@@ -171,7 +173,7 @@ export function TripFinder({ onMatchPackages, onInquiry }: TripFinderProps) {
 
             <Button type="submit" size="lg" className="h-12 w-full">
               <Search size={18} aria-hidden />
-              Find My Trip
+              {copy.ctaLabel}
             </Button>
           </form>
         </div>

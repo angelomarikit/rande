@@ -1,9 +1,7 @@
-import { galleryItems } from '@/data/gallery'
+import { useSiteContent } from '@/context/ContentContext'
 import { SectionHeading } from './ui/SectionHeading'
 import { Reveal } from './ui/Reveal'
 import { Button } from './ui/Button'
-
-const happyPhotos = galleryItems.filter((item) => item.src.includes('happy-')).slice(0, 6)
 
 interface HappyTravelersProps {
   onOpenGallery: () => void
@@ -11,7 +9,15 @@ interface HappyTravelersProps {
 
 /** Photo social proof only — no fabricated quotes or star ratings. */
 export function HappyTravelers({ onOpenGallery }: HappyTravelersProps) {
-  if (!happyPhotos.length) return null
+  const { content } = useSiteContent()
+  const heading = content.sections.happy_travelers
+  const happyPhotos = content.gallery
+    .filter((item) => item.src.includes('happy-') || item.caption?.toLowerCase().includes('happy'))
+    .slice(0, 6)
+
+  const photos = happyPhotos.length ? happyPhotos : content.gallery.slice(0, 6)
+
+  if (!photos.length) return null
 
   return (
     <section id="happy-travelers" className="section-pad scroll-mt-nav py-16 sm:py-24">
@@ -19,9 +25,9 @@ export function HappyTravelers({ onOpenGallery }: HappyTravelersProps) {
         <Reveal>
           <div className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
             <SectionHeading
-              eyebrow="Happy travelers"
-              title="Real trips. Real smiles."
-              support="Moments from tours with Rande Travel and Tours — no staged stock quotes, just photos from the road."
+              eyebrow={heading.eyebrow}
+              title={heading.title}
+              support={heading.support}
             />
             <Button variant="secondary" onClick={onOpenGallery}>
               View full gallery
@@ -30,7 +36,7 @@ export function HappyTravelers({ onOpenGallery }: HappyTravelersProps) {
         </Reveal>
 
         <div className="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
-          {happyPhotos.map((photo, i) => (
+          {photos.map((photo, i) => (
             <Reveal key={photo.id} delay={Math.min(i * 0.05, 0.2)}>
               <figure className="group relative overflow-hidden rounded-2xl">
                 <img

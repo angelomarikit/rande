@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'motion/react'
 import { ChevronDown } from 'lucide-react'
-import { siteConfig } from '@/data/site'
+import { useSiteContent } from '@/context/ContentContext'
 import { Button } from './ui/Button'
 
 interface HeroProps {
@@ -10,6 +10,9 @@ interface HeroProps {
 
 export function Hero({ onExplorePackages, onPlanTrip }: HeroProps) {
   const reduce = useReducedMotion()
+  const { content } = useSiteContent()
+  const hero = content.sections.hero
+  const sinceYear = content.settings.sinceYear
 
   return (
     <section
@@ -18,8 +21,8 @@ export function Hero({ onExplorePackages, onPlanTrip }: HeroProps) {
     >
       <div className="absolute inset-0">
         <motion.img
-          src="/images/hero-palawan.jpg"
-          alt="Aerial view of a turquoise lagoon framed by limestone cliffs in Palawan"
+          src={hero.image}
+          alt={hero.imageAlt}
           className="h-full w-full object-cover object-[58%_40%] sm:object-center"
           width={1920}
           height={1080}
@@ -40,7 +43,7 @@ export function Hero({ onExplorePackages, onPlanTrip }: HeroProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15 }}
           >
-            Your next adventure starts here
+            {hero.eyebrow}
           </motion.p>
 
           <motion.h1
@@ -49,7 +52,7 @@ export function Hero({ onExplorePackages, onPlanTrip }: HeroProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.25 }}
           >
-            The world is waiting. Let’s go explore.
+            {hero.heading}
           </motion.h1>
 
           <motion.p
@@ -58,8 +61,7 @@ export function Hero({ onExplorePackages, onPlanTrip }: HeroProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.38 }}
           >
-            From island escapes to unforgettable journeys abroad, discover travel
-            experiences worth remembering with {siteConfig.companyName}.
+            {hero.support}
           </motion.p>
 
           <motion.div
@@ -69,10 +71,10 @@ export function Hero({ onExplorePackages, onPlanTrip }: HeroProps) {
             transition={{ duration: 0.5, delay: 0.5 }}
           >
             <Button variant="primary" size="lg" onClick={onExplorePackages}>
-              Explore Tour Packages
+              {hero.primaryCta}
             </Button>
             <Button variant="ghost" size="lg" onClick={onPlanTrip}>
-              Plan My Trip
+              {hero.secondaryCta}
             </Button>
           </motion.div>
 
@@ -83,10 +85,10 @@ export function Hero({ onExplorePackages, onPlanTrip }: HeroProps) {
             transition={{ duration: 0.5, delay: 0.65 }}
           >
             <span className="rounded-full border border-white/25 bg-white/10 px-3 py-1 backdrop-blur-sm">
-              Since {siteConfig.sinceYear}
+              Since {sinceYear}
             </span>
             <span className="font-editorial text-base italic text-white/90">
-              Discover Palawan, Philippines
+              {hero.destinationLabel}
             </span>
           </motion.div>
         </div>

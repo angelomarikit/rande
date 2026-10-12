@@ -1,12 +1,15 @@
 import { useEffect, useId, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
-import { galleryItems } from '@/data/gallery'
+import { useSiteContent } from '@/context/ContentContext'
 import { useBodyScrollLock } from '@/hooks/useBodyScrollLock'
 import { SectionHeading } from './ui/SectionHeading'
 import { Reveal } from './ui/Reveal'
 
 export function Gallery() {
+  const { content } = useSiteContent()
+  const galleryItems = content.gallery
+  const heading = content.sections.gallery
   const [index, setIndex] = useState<number | null>(null)
   const titleId = useId()
   const reduce = useReducedMotion()
@@ -16,13 +19,16 @@ export function Gallery() {
     if (index === null) return
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') setIndex(null)
-      if (e.key === 'ArrowRight') setIndex((i) => (i === null ? i : (i + 1) % galleryItems.length))
+      if (e.key === 'ArrowRight')
+        setIndex((i) => (i === null ? i : (i + 1) % galleryItems.length))
       if (e.key === 'ArrowLeft')
-        setIndex((i) => (i === null ? i : (i - 1 + galleryItems.length) % galleryItems.length))
+        setIndex((i) =>
+          i === null ? i : (i - 1 + galleryItems.length) % galleryItems.length,
+        )
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [index])
+  }, [index, galleryItems.length])
 
   const active = index !== null ? galleryItems[index] : null
 
@@ -31,9 +37,9 @@ export function Gallery() {
       <div className="section-pad mx-auto max-w-7xl">
         <Reveal>
           <SectionHeading
-            eyebrow="Travel gallery"
-            title="Moments worth traveling for."
-            support="Happy travelers, heritage stops, and destination favorites from our tours — click any photo to expand."
+            eyebrow={heading.eyebrow}
+            title={heading.title}
+            support={heading.support}
           />
         </Reveal>
 
@@ -90,7 +96,11 @@ export function Gallery() {
             <button
               type="button"
               className="absolute top-1/2 left-3 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-ocean-navy sm:left-6"
-              onClick={() => setIndex((i) => (i === null ? i : (i - 1 + galleryItems.length) % galleryItems.length))}
+              onClick={() =>
+                setIndex((i) =>
+                  i === null ? i : (i - 1 + galleryItems.length) % galleryItems.length,
+                )
+              }
               aria-label="Previous image"
             >
               <ChevronLeft size={22} />
@@ -98,7 +108,9 @@ export function Gallery() {
             <button
               type="button"
               className="absolute top-1/2 right-3 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-ocean-navy sm:right-6"
-              onClick={() => setIndex((i) => (i === null ? i : (i + 1) % galleryItems.length))}
+              onClick={() =>
+                setIndex((i) => (i === null ? i : (i + 1) % galleryItems.length))
+              }
               aria-label="Next image"
             >
               <ChevronRight size={22} />

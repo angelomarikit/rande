@@ -20,6 +20,20 @@ npm run build
 npm run preview
 ```
 
+## Admin CMS (Supabase)
+
+Edit landing page content at `/admin` after connecting Supabase.
+
+Full setup guide: [`docs/ADMIN_CMS_SETUP.md`](docs/ADMIN_CMS_SETUP.md)
+
+Quick start:
+
+1. Create a Supabase project
+2. Copy `.env.example` → `.env.local` and add URL + anon key
+3. Run `supabase/schema.sql` in the Supabase SQL Editor
+4. Create an Auth user
+5. Open `/admin/login`, sign in, click **Sync website defaults to Supabase**
+
 ## Content & configuration
 
 Edit these files to update the site without rebuilding layouts:

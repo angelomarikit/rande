@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Clock, MapPin } from 'lucide-react'
-import { formatMoney, packageFilters, packages } from '@/data/packages'
+import { formatMoney, packageFilters } from '@/data/packages'
+import { useSiteContent } from '@/context/ContentContext'
 import type { InquiryPrefill, TourPackage } from '@/types'
 import { SectionHeading } from './ui/SectionHeading'
 import { Reveal } from './ui/Reveal'
@@ -13,6 +14,9 @@ interface PackagesProps {
 }
 
 export function Packages({ highlightIds, onViewDetails, onInquire }: PackagesProps) {
+  const { content } = useSiteContent()
+  const packages = content.packages
+  const heading = content.sections.packages
   const [filter, setFilter] = useState<string>('all')
 
   const filtered = useMemo(() => {
@@ -25,7 +29,7 @@ export function Packages({ highlightIds, onViewDetails, onInquire }: PackagesPro
       list = [...list].sort((a, b) => Number(set.has(b.id)) - Number(set.has(a.id)))
     }
     return list
-  }, [filter, highlightIds])
+  }, [filter, highlightIds, packages])
 
   return (
     <section id="packages" className="scroll-mt-nav bg-muted-bg py-16 sm:py-24">
@@ -33,9 +37,9 @@ export function Packages({ highlightIds, onViewDetails, onInquire }: PackagesPro
         <Reveal>
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <SectionHeading
-              eyebrow="Tour packages"
-              title="Thoughtfully planned. Beautifully experienced."
-              support="Less time planning. More time making memories. Rates below come from our tour materials and may change — inquire to confirm."
+              eyebrow={heading.eyebrow}
+              title={heading.title}
+              support={heading.support}
             />
             {highlightIds?.length ? (
               <p className="rounded-xl bg-tropical-green/10 px-4 py-2 text-sm font-medium text-tropical-green-dark">
