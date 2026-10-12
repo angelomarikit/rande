@@ -91,6 +91,10 @@ Add the same `VITE_SUPABASE_*` values in:
 
 Then rebuild/redeploy.
 
+### Vercel SPA routing
+
+This repo includes `vercel.json` so routes like `/admin/login` serve `index.html` instead of a host 404. Without that rewrite, only `/` works after deploy.
+
 ### GitHub Pages note
 
 If you deploy under a subpath (e.g. `/randetravelandtours/`), set Vite `base` accordingly and ensure router basename matches. For a custom domain root, keep `base: '/'`.
@@ -107,7 +111,8 @@ Update Open Graph image URLs in `index.html` to absolute URLs if needed, e.g.:
 
 | Problem | Fix |
 |---------|-----|
-| Admin says Supabase is not configured | Missing `.env.local` or forgot to restart `npm run dev` |
+| `/admin/login` shows host 404 (e.g. Vercel “This page doesn’t exist”) | Push `vercel.json` SPA rewrite and redeploy |
+| Admin says Supabase is not configured | Missing env vars on the host, or forgot to restart `npm run dev` locally |
 | Login fails | Confirm Auth user exists and email is confirmed |
 | Save fails with RLS error | Re-run policies in `schema.sql`; confirm you are signed in |
 | Upload fails | Confirm `media` bucket exists and storage policies ran |
